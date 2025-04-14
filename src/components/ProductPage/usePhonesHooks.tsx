@@ -5,7 +5,7 @@ import { fetchAllProducts, fetchProducts } from '../../utils/api';
 
 export const useProductHooks = () => {
   const [phones, setPhones] = useState<ProductDetails[]>([]);
-  const [itemPrevPage, setItemPrevPage] = useState(8);
+  const [itemPrevPage, setItemPrevPage] = useState<number | 'all'>(8);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('Newest');
   const [loading, setLoading] = useState(true);
@@ -30,8 +30,15 @@ export const useProductHooks = () => {
       setCurrentPage(Number(pageParam));
     }
 
+    // if (itemsPerPageParam) {
+    //   setItemPrevPage(Number(itemsPerPageParam));
+    // }
+
     if (itemsPerPageParam) {
-      setItemPrevPage(Number(itemsPerPageParam));
+      const parsed =
+        itemsPerPageParam === 'all' ? 'all' : Number(itemsPerPageParam);
+
+      setItemPrevPage(parsed);
     }
   }, [searchParams]);
 
@@ -104,8 +111,9 @@ export const useProductHooks = () => {
     });
   };
 
-  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+  const handleItemsPerPageChange = (newItemsPerPage: number | 'all') => {
     setItemPrevPage(newItemsPerPage);
+    setCurrentPage(1);
     setSearchParams({
       sort: sortBy,
       page: '1',
@@ -113,17 +121,19 @@ export const useProductHooks = () => {
     });
   };
 
-  const indexOfLastItem = currentPage * itemPrevPage;
+  const totalPages =
+    itemPrevPage === 'all' ? 1 : Math.ceil(phones.length / (itemPrevPage || 1));
+  // const indexOfLastItem = currentPage * itemPrevPage;
 
-  const indexOfFirstItem = indexOfLastItem - itemPrevPage;
-  const currentItems = phones.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(phones.length / itemPrevPage);
+  // const indexOfFirstItem = indexOfLastItem - itemPrevPage;
+  // const currentItems = phones.slice(indexOfFirstItem, indexOfLastItem);
+  // const totalPages = Math.ceil(phones.length / itemPrevPage);
 
   return {
     phones,
     loading,
     error,
-    currentItems,
+    // currentItems,
     currentPage,
     totalPages,
     setError,

@@ -12,7 +12,7 @@ import { NavLink } from 'react-router-dom';
 export const ProductPage = () => {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
   // eslint-disable-next-line
-  const [itemsPrePage, setItemsPrePage] = useState<number | 'all'>(8);
+  // const [itemsPrePage, setItemsPrePage] = useState<number | 'all'>(8);
 
   const {
     products,
@@ -22,6 +22,7 @@ export const ProductPage = () => {
     currentCategory,
     currentPage,
     totalPages,
+    itemPrevPage,
     // setCurrentPage,
     handleSortChange,
     handleItemsPerPageChange,
@@ -44,11 +45,16 @@ export const ProductPage = () => {
     return a.name.localeCompare(b.name);
   });
 
-  const itemsPerPage = itemsPrePage === 'all' ? products.length : itemsPrePage;
-  const totalsPages = Math.ceil(products.length / itemsPerPage);
+  // const itemsPerPage = itemsPrePage === 'all' ? products.length : itemsPrePage;
+  // const totalsPages = Math.ceil(products.length / itemsPerPage);
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const endIndex = startIndex + itemsPerPage;
+  // const displayedProducts = sortedProducts.slice(startIndex, endIndex);
+  const itemsPerPage = itemPrevPage === 'all' ? products.length : itemPrevPage;
+  const startIndex = (currentPage - 1) * (itemsPerPage || 1);
+  const endIndex =
+    itemPrevPage === 'all' ? products.length : startIndex + (itemsPerPage || 1);
   const displayedProducts = sortedProducts.slice(startIndex, endIndex);
 
   // const handleItemsPrePageChange = (option: { value: string }) => {
@@ -111,6 +117,7 @@ export const ProductPage = () => {
               <div className="mobile__sortby">
                 <h3 className="sortby">Sort by</h3>
                 <MyDropdownSortBy
+                  value={sortBy}
                   onChange={option => {
                     handleSortChange(option.value);
                   }}
@@ -119,9 +126,13 @@ export const ProductPage = () => {
               <div className="mobile__items">
                 <h3 className="item__page">Items on page</h3>
                 <MyDropdownItems
-                  onChange={option =>
-                    handleItemsPerPageChange(Number(option.value))
-                  }
+                  value={String(itemsPerPage)}
+                  onChange={option => {
+                    const value =
+                      option.value === 'all' ? 'all' : Number(option.value);
+
+                    handleItemsPerPageChange(value);
+                  }}
                 />
               </div>
             </div>
@@ -136,7 +147,7 @@ export const ProductPage = () => {
               ))}
             </div>
 
-            {itemsPrePage !== 'all' && (
+            {itemPrevPage !== 'all' && (
               <div className="mobile__buttons">
                 <button
                   className={`mobile__buttonsbuttonPrev ${currentPage === 1 ? 'disabled' : ''}`}
@@ -145,7 +156,7 @@ export const ProductPage = () => {
                 >
                   &lt;
                 </button>
-                {Array.from({ length: totalsPages }, (_, i) => i + 1).map(
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                   number => (
                     <button
                       key={number}

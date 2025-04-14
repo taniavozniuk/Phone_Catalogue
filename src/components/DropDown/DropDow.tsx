@@ -8,29 +8,49 @@ interface DropDownOption {
 
 interface DropDownProps {
   onChange: (option: DropDownOption) => void;
+  value: string;
 }
 
 const sortby = ['Newest', 'Alphabetically', 'Cheapest'];
 const items = ['4', '8', '16', 'all'];
 
-const defaultOption = sortby[0];
-const defaltItems = items[1];
+// const defaultOption = sortby[0];
+// const defaltItems = items[1];
 
-export function MyDropdownSortBy({ onChange }: DropDownProps) {
+// export function MyDropdownSortBy({ onChange, value }: DropDownProps) {
+//   return (
+//     <Dropdown
+//       options={sortby}
+//       value={defaultOption}
+//       onChange={option => onChange({ value: option.value })}
+//     />
+//   );
+// }
+
+// export function MyDropdownItems({ onChange }: DropDownProps) {
+//   return (
+//     <Dropdown
+//       options={items}
+//       value={defaltItems}
+//       onChange={option => onChange({ value: option.value })}
+//     />
+//   );
+// }
+export function MyDropdownSortBy({ onChange, value }: DropDownProps) {
   return (
     <Dropdown
       options={sortby}
-      value={defaultOption}
+      value={value}
       onChange={option => onChange({ value: option.value })}
     />
   );
 }
 
-export function MyDropdownItems({ onChange }: DropDownProps) {
+export function MyDropdownItems({ onChange, value }: DropDownProps) {
   return (
     <Dropdown
       options={items}
-      value={defaltItems}
+      value={value}
       onChange={option => onChange({ value: option.value })}
     />
   );
