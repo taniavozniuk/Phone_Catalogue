@@ -126,7 +126,7 @@ export const ProductPage = () => {
               <div className="mobile__items">
                 <h3 className="item__page">Items on page</h3>
                 <MyDropdownItems
-                  value={String(itemsPerPage)}
+                  value={itemPrevPage === 'all' ? 'all' : String(itemPrevPage)}
                   onChange={option => {
                     const value =
                       option.value === 'all' ? 'all' : Number(option.value);
